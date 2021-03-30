@@ -12,7 +12,7 @@ import HaishinKit
 @objc(RTMPBroadcaster) public class RTMPBroadcaster: CDVPlugin {
     private var originalBackgroundColor: UIColor!
     
-    var cameraView: MTHKView!
+    var cameraView: HKView!
     private var rtmpConnection: RTMPConnection!
     private var rtmpStream: RTMPStream!
     private var currentPosition: AVCaptureDevice.Position!
@@ -57,7 +57,7 @@ import HaishinKit
             return
         }
         
-        cameraView = MTHKView(frame: self.webView.frame)
+        cameraView = HKView(frame: self.webView.bounds)
         cameraView.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraView.attachStream(rtmpStream)
         

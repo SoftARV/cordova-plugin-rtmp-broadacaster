@@ -14,7 +14,7 @@
             </feature>
         </config-file>
         <framework src="lib/ios/HaishinKit.framework" custom="true" />
-        <framework src="lib/ios/Logboard.framework" custom="true" />
+        <framework src="lib/ios/Logboard.xcframework" custom="true" />
         <source-file src="src/ios/RTMPBroadcaster.swift" />
         <framework src="Foundation.framework" />
         <framework src="AVFoundation.framework" />
