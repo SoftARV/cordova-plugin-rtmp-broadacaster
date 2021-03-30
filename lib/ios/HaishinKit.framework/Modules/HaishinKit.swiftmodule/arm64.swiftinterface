@@ -1,0 +1,1326 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-module-flags: -target arm64-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name HaishinKit
+import AVFoundation
+import AudioToolbox
+import CoreAudio
+import CoreFoundation
+import CoreImage
+import CoreMedia
+import CoreVideo
+import Foundation
+import GLKit
+@_exported import HaishinKit
+import Logboard
+import MetalKit
+import Network
+import Swift
+import UIKit
+import VideoToolbox
+public enum FLVTagType : Swift.UInt8 {
+  case audio
+  case video
+  case data
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public protocol FLVTag : Swift.CustomDebugStringConvertible {
+  var tagType: HaishinKit.FLVTagType { get set }
+  var dataSize: Swift.UInt32 { get set }
+  var timestamp: Swift.UInt32 { get set }
+  var timestampExtended: Swift.UInt8 { get set }
+  var streamId: Swift.UInt32 { get set }
+  var offset: Swift.UInt64 { get set }
+  init()
+  mutating func readData(_ fileHandler: Foundation.FileHandle)
+}
+extension FLVTag {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+public struct FLVDataTag : HaishinKit.FLVTag {
+  public var tagType: HaishinKit.FLVTagType
+  public var dataSize: Swift.UInt32
+  public var timestamp: Swift.UInt32
+  public var timestampExtended: Swift.UInt8
+  public var streamId: Swift.UInt32
+  public var offset: Swift.UInt64
+  public init()
+  public mutating func readData(_ fileHandler: Foundation.FileHandle)
+}
+public struct FLVAudioTag : HaishinKit.FLVTag {
+  public var tagType: HaishinKit.FLVTagType
+  public var dataSize: Swift.UInt32
+  public var timestamp: Swift.UInt32
+  public var timestampExtended: Swift.UInt8
+  public var streamId: Swift.UInt32
+  public var offset: Swift.UInt64
+  public var codec: HaishinKit.FLVAudioCodec
+  public var soundRate: HaishinKit.FLVSoundRate
+  public var soundSize: HaishinKit.FLVSoundSize
+  public var soundType: HaishinKit.FLVSoundType
+  public init()
+  public mutating func readData(_ fileHandler: Foundation.FileHandle)
+}
+public struct FLVVideoTag : HaishinKit.FLVTag {
+  public var tagType: HaishinKit.FLVTagType
+  public var dataSize: Swift.UInt32
+  public var timestamp: Swift.UInt32
+  public var timestampExtended: Swift.UInt8
+  public var streamId: Swift.UInt32
+  public var offset: Swift.UInt64
+  public var frameType: HaishinKit.FLVFrameType
+  public var codec: HaishinKit.FLVVideoCodec
+  public var avcPacketType: HaishinKit.FLVAVCPacketType
+  public var compositionTime: Swift.Int32
+  public init()
+  public mutating func readData(_ fileHandler: Foundation.FileHandle)
+}
+@objc @_inheritsConvenienceInitializers open class AudioEffect : ObjectiveC.NSObject {
+  open func execute(_ buffer: CoreAudio.UnsafeMutableAudioBufferListPointer?, format: CoreAudioTypes.AudioStreamBasicDescription?)
+  @objc deinit
+  @objc override dynamic public init()
+}
+public enum ScalingMode : Swift.String {
+  case normal
+  case letterbox
+  case cropSourceToCleanAperture
+  case trim
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol KeyPathRepresentable : Swift.CaseIterable, Swift.Hashable {
+  var keyPath: Swift.AnyKeyPath { get }
+}
+public class Setting<T, Key> : Swift.ExpressibleByDictionaryLiteral where T : AnyObject, Key : HaishinKit.KeyPathRepresentable {
+  public typealias Key = Key
+  public typealias Value = Any
+  required public init(dictionaryLiteral elements: (Key, Any)...)
+  public subscript(key: Key) -> Any? {
+    get
+    set(newValue)
+  }
+  @objc deinit
+}
+extension Setting : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+public protocol HKPictureInPicureController : AnyObject {
+  var isPictureInPictureActive: Swift.Bool { get }
+  var pictureInPictureSize: CoreGraphics.CGSize { get set }
+  var pictureInPicturePosition: HaishinKit.HKPictureInPicureControllerPosition { get set }
+  var pictureInPictureMargin: CoreGraphics.CGFloat { get set }
+  var pictureInPictureCornerRadius: CoreGraphics.CGFloat { get set }
+  var pictureInPictureAnimationDuration: Foundation.TimeInterval { get set }
+  func startPictureInPicture()
+  func stopPictureInPicture()
+}
+open class FLVReader {
+  public static var header: Foundation.Data
+  final public let url: Foundation.URL
+  public init(url: Foundation.URL)
+  public func getData(_ tag: HaishinKit.FLVTag) -> Foundation.Data?
+  @objc deinit
+}
+extension FLVReader : Swift.IteratorProtocol {
+  public func next() -> HaishinKit.FLVTag?
+  public typealias Element = HaishinKit.FLVTag
+}
+@_hasMissingDesignatedInitializers open class RTMPSharedObject : HaishinKit.EventDispatcher {
+  public static func getRemote(withName: Swift.String, remotePath: Swift.String, persistence: Swift.Bool) -> HaishinKit.RTMPSharedObject
+  open var objectEncoding: HaishinKit.RTMPObjectEncoding {
+    get
+  }
+  open var data: [Swift.String : Any?] {
+    get
+  }
+  open func setProperty(_ name: Swift.String, _ value: Any?)
+  open func connect(_ rtmpConnection: HaishinKit.RTMPConnection)
+  open func clear()
+  open func close()
+  @objc deinit
+  override public init()
+  override public init(target: Swift.AnyObject)
+}
+extension RTMPSharedObject : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension HKPictureInPicureController where Self : UIKit.UIViewController {
+  public var isPictureInPictureActive: Swift.Bool {
+    get
+  }
+  public var pictureInPictureSize: CoreGraphics.CGSize {
+    get
+    set(newValue)
+  }
+  public var pictureInPicturePosition: HaishinKit.HKPictureInPicureControllerPosition {
+    get
+    set(newValue)
+  }
+  public var pictureInPictureMargin: CoreGraphics.CGFloat {
+    get
+    set(newValue)
+  }
+  public var pictureInPictureCornerRadius: CoreGraphics.CGFloat {
+    get
+    set(newValue)
+  }
+  public var pictureInPictureAnimationDuration: Foundation.TimeInterval {
+    get
+    set(newValue)
+  }
+  public func startPictureInPicture()
+  public func stopPictureInPicture()
+}
+public enum HKPictureInPicureControllerPosition {
+  case topLeft
+  case topRight
+  case bottomRight
+  case bottomLeft
+  public static func == (a: HaishinKit.HKPictureInPicureControllerPosition, b: HaishinKit.HKPictureInPicureControllerPosition) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public enum FLVSoundRate : Swift.UInt8 {
+  case kHz5_5
+  case kHz11
+  case kHz22
+  case kHz44
+  public var floatValue: Swift.Float64 {
+    get
+  }
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public struct SoundTransform {
+  public static var defaultVolume: Swift.Float
+  public static var defaultPan: Swift.Float
+  public var volume: Swift.Float
+  public var pan: Swift.Float
+}
+extension SoundTransform : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+public struct HTTPRequest {
+  public static var separator: Swift.UInt8
+  public var uri: Swift.String
+  public var method: Swift.String
+  public var version: Swift.String
+  public var headerFields: [Swift.String : Swift.String]
+  public var body: Foundation.Data?
+}
+public var kASUndefined: HaishinKit.ASUndefined
+public typealias ASObject = [Swift.String : Any?]
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers final public class ASUndefined : ObjectiveC.NSObject {
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+public struct ASTypedObject {
+  public typealias TypedObjectDecoder = (Swift.String, HaishinKit.ASObject) throws -> Any
+  public static func register(typeNamed name: Swift.String, decoder: @escaping HaishinKit.ASTypedObject.TypedObjectDecoder)
+  public static func register<T>(type: T.Type, named name: Swift.String) where T : Swift.Decodable
+  public static func unregister(typeNamed name: Swift.String)
+}
+public struct ASArray {
+  public var length: Swift.Int {
+    get
+  }
+  public init(count: Swift.Int)
+  public init(data: [Any?])
+}
+extension ASArray : Swift.ExpressibleByArrayLiteral {
+  public init(arrayLiteral elements: Any?...)
+  public subscript(i: Any) -> Any? {
+    get
+    set(newValue)
+  }
+  public typealias ArrayLiteralElement = Any?
+}
+extension ASArray : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension ASArray : Swift.Equatable {
+  public static func == (lhs: HaishinKit.ASArray, rhs: HaishinKit.ASArray) -> Swift.Bool
+}
+@objc final public class ASXMLDocument : ObjectiveC.NSObject {
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  public init(data: Swift.String)
+  @objc deinit
+  @objc override dynamic public init()
+}
+@objc final public class ASXML : ObjectiveC.NSObject {
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  public init(data: Swift.String)
+  @objc deinit
+  @objc override dynamic public init()
+}
+public protocol VideoEncoderDelegate : AnyObject {
+  func didSetFormatDescription(video formatDescription: CoreMedia.CMFormatDescription?)
+  func sampleOutput(video sampleBuffer: CoreMedia.CMSampleBuffer)
+}
+@_hasMissingDesignatedInitializers final public class H264Encoder {
+  public enum Option : Swift.String, HaishinKit.KeyPathRepresentable, Swift.CaseIterable {
+    case muted
+    case width
+    case height
+    case bitrate
+    case profileLevel
+    case maxKeyFrameIntervalDuration
+    case scalingMode
+    public var keyPath: Swift.AnyKeyPath {
+      get
+    }
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+    public typealias AllCases = [HaishinKit.H264Encoder.Option]
+    public static var allCases: [HaishinKit.H264Encoder.Option] {
+      get
+    }
+  }
+  public static var defaultWidth: Swift.Int32
+  public static var defaultHeight: Swift.Int32
+  public static var defaultBitrate: Swift.UInt32
+  public static var defaultScalingMode: HaishinKit.ScalingMode
+  final public var settings: HaishinKit.Setting<HaishinKit.H264Encoder, HaishinKit.H264Encoder.Option> {
+    get
+    set(value)
+  }
+  final public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  @objc deinit
+}
+extension H264Encoder : HaishinKit.Running {
+  final public func startRunning()
+  final public func stopRunning()
+}
+@objc open class MTHKView : MetalKit.MTKView {
+  open var isMirrored: Swift.Bool
+  open var videoGravity: AVFoundation.AVLayerVideoGravity
+  open var videoFormatDescription: CoreMedia.CMVideoFormatDescription? {
+    get
+  }
+  @objc dynamic public init(frame: CoreGraphics.CGRect)
+  @objc required dynamic public init(coder aDecoder: Foundation.NSCoder)
+  @objc override dynamic open func awakeFromNib()
+  open func attachStream(_ stream: HaishinKit.NetStream?)
+  @objc deinit
+  @objc override dynamic public init(frame frameRect: CoreGraphics.CGRect, device: Metal.MTLDevice?)
+}
+extension MTHKView : MetalKit.MTKViewDelegate {
+  @objc dynamic public func mtkView(_ view: MetalKit.MTKView, drawableSizeWillChange size: CoreGraphics.CGSize)
+  @objc dynamic public func draw(in view: MetalKit.MTKView)
+}
+@objc @_inheritsConvenienceInitializers open class NetStream : ObjectiveC.NSObject {
+  final public let lockQueue: Dispatch.DispatchQueue
+  open var mixer: HaishinKit.AVMixer {
+    get
+  }
+  open var metadata: [Swift.String : Any?]
+  open var context: CoreImage.CIContext? {
+    get
+    set(newValue)
+  }
+  open var torch: Swift.Bool {
+    get
+    set(newValue)
+  }
+  open var audioSettings: HaishinKit.Setting<HaishinKit.AudioConverter, HaishinKit.AudioConverter.Option> {
+    get
+    set(newValue)
+  }
+  open var videoSettings: HaishinKit.Setting<HaishinKit.H264Encoder, HaishinKit.H264Encoder.Option> {
+    get
+    set(newValue)
+  }
+  open var captureSettings: HaishinKit.Setting<HaishinKit.AVMixer, HaishinKit.AVMixer.Option> {
+    get
+    set(newValue)
+  }
+  open var recorderSettings: [AVFoundation.AVMediaType : [Swift.String : Any]] {
+    get
+    set(newValue)
+  }
+  @objc deinit
+  open func attachCamera(_ camera: AVFoundation.AVCaptureDevice?, onError: ((Foundation.NSError) -> Swift.Void)? = nil)
+  open func attachAudio(_ audio: AVFoundation.AVCaptureDevice?, automaticallyConfiguresApplicationAudioSession: Swift.Bool = false, onError: ((Foundation.NSError) -> Swift.Void)? = nil)
+  open func setPointOfInterest(_ focus: CoreGraphics.CGPoint, exposure: CoreGraphics.CGPoint)
+  open func appendSampleBuffer(_ sampleBuffer: CoreMedia.CMSampleBuffer, withType: AVFoundation.AVMediaType, options: [ObjectiveC.NSObject : Swift.AnyObject]? = nil)
+  open func registerVideoEffect(_ effect: HaishinKit.VideoEffect) -> Swift.Bool
+  open func unregisterVideoEffect(_ effect: HaishinKit.VideoEffect) -> Swift.Bool
+  open func registerAudioEffect(_ effect: HaishinKit.AudioEffect) -> Swift.Bool
+  open func unregisterAudioEffect(_ effect: HaishinKit.AudioEffect) -> Swift.Bool
+  open func dispose()
+  @objc override dynamic public init()
+}
+public enum FLVVideoCodec : Swift.UInt8 {
+  case sorensonH263
+  case screen1
+  case on2VP6
+  case on2VP6Alpha
+  case screen2
+  case avc
+  case unknown
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers open class HKView : UIKit.UIView {
+  public static var defaultBackgroundColor: UIKit.UIColor
+  @objc override dynamic open class var layerClass: Swift.AnyClass {
+    @objc get
+  }
+  @objc override dynamic open var layer: AVFoundation.AVCaptureVideoPreviewLayer {
+    @objc get
+  }
+  public var videoGravity: AVFoundation.AVLayerVideoGravity {
+    get
+    set(value)
+  }
+  public var videoFormatDescription: CoreMedia.CMVideoFormatDescription? {
+    get
+  }
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @objc deinit
+  @objc override dynamic open func awakeFromNib()
+  open func attachStream(_ stream: HaishinKit.NetStream?)
+}
+public protocol ScreenCaptureOutputPixelBufferDelegate : AnyObject {
+  func didSet(size: CoreGraphics.CGSize)
+  func output(pixelBuffer: CoreVideo.CVPixelBuffer, withPresentationTime: CoreMedia.CMTime)
+}
+public protocol CustomCaptureSession : HaishinKit.Running {
+  var attributes: [Foundation.NSString : ObjectiveC.NSObject] { get }
+  var delegate: HaishinKit.ScreenCaptureOutputPixelBufferDelegate? { get set }
+}
+@objc open class ScreenCaptureSession : ObjectiveC.NSObject, HaishinKit.CustomCaptureSession {
+  public var enabledScale: Swift.Bool
+  public var frameInterval: Swift.Int
+  public var attributes: [Foundation.NSString : ObjectiveC.NSObject] {
+    get
+  }
+  weak public var delegate: HaishinKit.ScreenCaptureOutputPixelBufferDelegate?
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  public var afterScreenUpdates: Swift.Bool
+  public init(shared: UIKit.UIApplication)
+  public init(viewToCapture: UIKit.UIView)
+  @objc public func onScreen(_ displayLink: QuartzCore.CADisplayLink)
+  open func onScreenProcess(_ displayLink: QuartzCore.CADisplayLink)
+  @objc deinit
+  @objc override dynamic public init()
+}
+extension ScreenCaptureSession : HaishinKit.Running {
+  public func startRunning()
+  public func stopRunning()
+}
+public struct MachUtil {
+  public static var nanosPerUsec: Swift.UInt64
+  public static var nanosPerMsec: Swift.UInt64
+  public static var nanosPerSec: Swift.UInt64
+  public static func nanosToAbs(_ nanos: Swift.UInt64) -> Swift.UInt64
+  public static func absToNanos(_ abs: Swift.UInt64) -> Swift.UInt64
+}
+public protocol TSWriterDelegate : AnyObject {
+  func didOutput(_ data: Foundation.Data)
+}
+public class TSWriter : HaishinKit.Running {
+  public static var defaultPATPID: Swift.UInt16
+  public static var defaultPMTPID: Swift.UInt16
+  public static var defaultVideoPID: Swift.UInt16
+  public static var defaultAudioPID: Swift.UInt16
+  public static var defaultSegmentDuration: Swift.Double
+  weak public var delegate: HaishinKit.TSWriterDelegate?
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  public var expectedMedias: Swift.Set<AVFoundation.AVMediaType>
+  public init(segmentDuration: Swift.Double = TSWriter.defaultSegmentDuration)
+  public func startRunning()
+  public func stopRunning()
+  @objc deinit
+}
+extension TSWriter : HaishinKit.AudioConverterDelegate {
+  public func didSetFormatDescription(audio formatDescription: CoreMedia.CMFormatDescription?)
+  public func sampleOutput(audio data: CoreAudio.UnsafeMutableAudioBufferListPointer, presentationTimeStamp: CoreMedia.CMTime)
+}
+extension TSWriter : HaishinKit.VideoEncoderDelegate {
+  public func didSetFormatDescription(video formatDescription: CoreMedia.CMFormatDescription?)
+  public func sampleOutput(video sampleBuffer: CoreMedia.CMSampleBuffer)
+}
+@objc @_hasMissingDesignatedInitializers final public class NetClient : HaishinKit.NetSocket {
+  override final public func listen()
+  @objc deinit
+  @objc override dynamic public init()
+}
+extension AudioStreamBasicDescription : Swift.Equatable {
+  public static func == (lhs: CoreAudioTypes.AudioStreamBasicDescription, rhs: CoreAudioTypes.AudioStreamBasicDescription) -> Swift.Bool
+}
+public struct RTMPStreamInfo {
+  public var byteCount: HaishinKit.Atomic<Swift.Int64> {
+    get
+  }
+  public var resourceName: Swift.String? {
+    get
+  }
+  public var currentBytesPerSecond: Swift.Int32 {
+    get
+  }
+}
+extension RTMPStreamInfo : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+open class Responder {
+  public typealias Handler = ([Any?]) -> Swift.Void
+  public init(result: @escaping HaishinKit.Responder.Handler, status: HaishinKit.Responder.Handler? = nil)
+  @objc deinit
+}
+open class RTMPConnection : HaishinKit.EventDispatcher {
+  public static var defaultWindowSizeS: Swift.Int64
+  public static var supportedProtocols: Swift.Set<Swift.String>
+  public static var defaultPort: Swift.Int
+  public static var defaultFlashVer: Swift.String
+  public static var defaultChunkSizeS: Swift.Int
+  public static var defaultCapabilities: Swift.Int
+  public static var defaultObjectEncoding: HaishinKit.RTMPObjectEncoding
+  public enum Code : Swift.String {
+    case callBadVersion
+    case callFailed
+    case callProhibited
+    case connectAppshutdown
+    case connectClosed
+    case connectFailed
+    case connectIdleTimeOut
+    case connectInvalidApp
+    case connectNetworkChange
+    case connectRejected
+    case connectSuccess
+    public var level: Swift.String {
+      get
+    }
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  open var swfUrl: Swift.String?
+  open var pageUrl: Swift.String?
+  open var timeout: Swift.Int {
+    get
+    set(newValue)
+  }
+  open var qualityOfService: Dispatch.DispatchQoS {
+    get
+    set(newValue)
+  }
+  open var flashVer: Swift.String
+  open var chunkSize: Swift.Int
+  open var uri: Foundation.URL? {
+    get
+  }
+  open var connected: Swift.Bool {
+    get
+  }
+  open var requireNetworkFramework: Swift.Bool
+  open var parameters: Any?
+  open var objectEncoding: HaishinKit.RTMPObjectEncoding
+  open var totalBytesIn: Swift.Int64 {
+    get
+  }
+  open var totalBytesOut: Swift.Int64 {
+    get
+  }
+  open var totalStreamsCount: Swift.Int {
+    get
+  }
+  @objc dynamic open var previousQueueBytesOut: [Swift.Int64] {
+    get
+  }
+  @objc dynamic open var currentBytesInPerSecond: Swift.Int32 {
+    get
+  }
+  @objc dynamic open var currentBytesOutPerSecond: Swift.Int32 {
+    get
+  }
+  override public init()
+  @objc deinit
+  open func call(_ commandName: Swift.String, responder: HaishinKit.Responder?, arguments: Any?...)
+  open func connect(_ command: Swift.String, arguments: Any?...)
+  open func close()
+  override public init(target: Swift.AnyObject)
+}
+public enum FLVAVCPacketType : Swift.UInt8 {
+  case seq
+  case nal
+  case eos
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc open class RTMPStream : HaishinKit.NetStream {
+  public enum Code : Swift.String {
+    case bufferEmpty
+    case bufferFlush
+    case bufferFull
+    case connectClosed
+    case connectFailed
+    case connectRejected
+    case connectSuccess
+    case drmUpdateNeeded
+    case failed
+    case multicastStreamReset
+    case pauseNotify
+    case playFailed
+    case playFileStructureInvalid
+    case playInsufficientBW
+    case playNoSupportedTrackFound
+    case playReset
+    case playStart
+    case playStop
+    case playStreamNotFound
+    case playTransition
+    case playUnpublishNotify
+    case publishBadName
+    case publishIdle
+    case publishStart
+    case recordAlreadyExists
+    case recordFailed
+    case recordNoAccess
+    case recordStart
+    case recordStop
+    case recordDiskQuotaExceeded
+    case secondScreenStart
+    case secondScreenStop
+    case seekFailed
+    case seekInvalidTime
+    case seekNotify
+    case stepNotify
+    case unpauseNotify
+    case unpublishSuccess
+    case videoDimensionChange
+    public var level: Swift.String {
+      get
+    }
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public enum PlayTransition : Swift.String {
+    case append
+    case appendAndWait
+    case reset
+    case resume
+    case stop
+    case swap
+    case `switch`
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public struct PlayOption : Swift.CustomDebugStringConvertible {
+    public var len: Swift.Double
+    public var offset: Swift.Double
+    public var oldStreamName: Swift.String
+    public var start: Swift.Double
+    public var streamName: Swift.String
+    public var transition: HaishinKit.RTMPStream.PlayTransition
+    public var debugDescription: Swift.String {
+      get
+    }
+  }
+  public enum HowToPublish : Swift.String {
+    case record
+    case append
+    case appendWithGap
+    case live
+    case localRecord
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public static var defaultAudioBitrate: Swift.UInt32
+  public static var defaultVideoBitrate: Swift.UInt32
+  weak open var delegate: HaishinKit.RTMPStreamDelegate?
+  open var info: HaishinKit.RTMPStreamInfo {
+    get
+  }
+  open var objectEncoding: HaishinKit.RTMPObjectEncoding {
+    get
+  }
+  @objc dynamic open var currentFPS: Swift.UInt16 {
+    get
+  }
+  open var soundTransform: HaishinKit.SoundTransform {
+    get
+    set(newValue)
+  }
+  open var receiveAudio: Swift.Bool {
+    get
+    set(value)
+  }
+  open var receiveVideo: Swift.Bool {
+    get
+    set(value)
+  }
+  open var paused: Swift.Bool {
+    get
+    set(value)
+  }
+  public init(connection: HaishinKit.RTMPConnection)
+  @objc deinit
+  open func play(_ arguments: Any?...)
+  open func seek(_ offset: Swift.Double)
+  open func publish(_ name: Swift.String?, type: HaishinKit.RTMPStream.HowToPublish = .live)
+  open func close()
+  open func send(handlerName: Swift.String, arguments: Any?...)
+  open func appendFile(_ file: Foundation.URL, completionHandler: HaishinKit.MP4Sampler.Handler? = nil)
+  open func createMetaData() -> HaishinKit.ASObject
+  @objc override dynamic public init()
+}
+extension RTMPStream : HaishinKit.IEventDispatcher {
+  public func addEventListener(_ type: HaishinKit.Event.Name, selector: ObjectiveC.Selector, observer: Swift.AnyObject? = nil, useCapture: Swift.Bool = false)
+  public func removeEventListener(_ type: HaishinKit.Event.Name, selector: ObjectiveC.Selector, observer: Swift.AnyObject? = nil, useCapture: Swift.Bool = false)
+  public func dispatch(event: HaishinKit.Event)
+  public func dispatch(_ type: HaishinKit.Event.Name, bubbles: Swift.Bool, data: Any?)
+}
+@objc @_inheritsConvenienceInitializers open class HLSService : HaishinKit.HTTPService {
+  open func addHTTPStream(_ stream: HaishinKit.HTTPStream)
+  open func removeHTTPStream(_ stream: HaishinKit.HTTPStream)
+  override open func get(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  @objc deinit
+  override public init(domain: Swift.String, type: Swift.String, name: Swift.String, port: Swift.Int32)
+}
+public protocol TimerDriverDelegate : AnyObject {
+  func tick(_ driver: HaishinKit.TimerDriver)
+}
+@_hasMissingDesignatedInitializers public class TimerDriver {
+  public var interval: Swift.UInt64
+  public func setDelegate(_ delegate: HaishinKit.TimerDriverDelegate, withQueue: Dispatch.DispatchQueue? = nil)
+  @objc deinit
+}
+extension TimerDriver : HaishinKit.Running {
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  public func startRunning()
+  public func stopRunning()
+}
+public enum RTMPObjectEncoding : Swift.UInt8 {
+  case amf0
+  case amf3
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public protocol AVRecorderDelegate : AnyObject {
+  var moviesDirectory: Foundation.URL { get }
+  func rotateFile(_ recorder: HaishinKit.AVRecorder, withPresentationTimeStamp: CoreMedia.CMTime, mediaType: AVFoundation.AVMediaType)
+  func getPixelBufferAdaptor(_ recorder: HaishinKit.AVRecorder, withWriterInput: AVFoundation.AVAssetWriterInput?) -> AVFoundation.AVAssetWriterInputPixelBufferAdaptor?
+  func getWriterInput(_ recorder: HaishinKit.AVRecorder, mediaType: AVFoundation.AVMediaType, sourceFormatHint: CoreMedia.CMFormatDescription?) -> AVFoundation.AVAssetWriterInput?
+  func didStartRunning(_ recorder: HaishinKit.AVRecorder)
+  func didStopRunning(_ recorder: HaishinKit.AVRecorder)
+  func didFinishWriting(_ recorder: HaishinKit.AVRecorder)
+}
+@objc @_inheritsConvenienceInitializers open class AVRecorder : ObjectiveC.NSObject {
+  public static var defaultOutputSettings: [AVFoundation.AVMediaType : [Swift.String : Any]]
+  open var writer: AVFoundation.AVAssetWriter?
+  open var fileName: Swift.String?
+  weak open var delegate: HaishinKit.AVRecorderDelegate?
+  open var writerInputs: [AVFoundation.AVMediaType : AVFoundation.AVAssetWriterInput]
+  open var outputSettings: [AVFoundation.AVMediaType : [Swift.String : Any]]
+  open var pixelBufferAdaptor: AVFoundation.AVAssetWriterInputPixelBufferAdaptor?
+  final public let lockQueue: Dispatch.DispatchQueue
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  @objc deinit
+  @objc override dynamic public init()
+}
+extension AVRecorder : HaishinKit.Running {
+  public func startRunning()
+  public func stopRunning()
+}
+@objc open class DefaultAVRecorderDelegate : ObjectiveC.NSObject {
+  public enum FileType {
+    case mp4
+    case mov
+    public var AVFileType: AVFoundation.AVFileType {
+      get
+    }
+    public var fileExtension: Swift.String {
+      get
+    }
+    public static func == (a: HaishinKit.DefaultAVRecorderDelegate.FileType, b: HaishinKit.DefaultAVRecorderDelegate.FileType) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  public static var shared: HaishinKit.DefaultAVRecorderDelegate
+  open var duration: Swift.Int64
+  open var dateFormat: Swift.String
+  public var fileType: HaishinKit.DefaultAVRecorderDelegate.FileType {
+    get
+  }
+  open var moviesDirectory: Foundation.URL {
+    get
+    set(value)
+  }
+  public init(fileType: HaishinKit.DefaultAVRecorderDelegate.FileType = .mp4)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc extension DefaultAVRecorderDelegate : HaishinKit.AVRecorderDelegate {
+  @objc dynamic open func rotateFile(_ recorder: HaishinKit.AVRecorder, withPresentationTimeStamp: CoreMedia.CMTime, mediaType: AVFoundation.AVMediaType)
+  @objc dynamic open func getPixelBufferAdaptor(_ recorder: HaishinKit.AVRecorder, withWriterInput: AVFoundation.AVAssetWriterInput?) -> AVFoundation.AVAssetWriterInputPixelBufferAdaptor?
+  @objc dynamic open func getWriterInput(_ recorder: HaishinKit.AVRecorder, mediaType: AVFoundation.AVMediaType, sourceFormatHint: CoreMedia.CMFormatDescription?) -> AVFoundation.AVAssetWriterInput?
+  @objc dynamic open func didFinishWriting(_ recorder: HaishinKit.AVRecorder)
+  @objc dynamic open func didStartRunning(_ recorder: HaishinKit.AVRecorder)
+  @objc dynamic open func didStopRunning(_ recorder: HaishinKit.AVRecorder)
+}
+public enum FLVSoundType : Swift.UInt8 {
+  case mono
+  case stereo
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+  public init?(rawValue: Swift.UInt8)
+}
+extension DeviceUtil {
+  public static func videoOrientation(by notification: Foundation.Notification) -> AVFoundation.AVCaptureVideoOrientation?
+  public static func videoOrientation(by orientation: UIKit.UIDeviceOrientation) -> AVFoundation.AVCaptureVideoOrientation?
+  public static func videoOrientation(by orientation: UIKit.UIInterfaceOrientation) -> AVFoundation.AVCaptureVideoOrientation?
+}
+public enum FLVSoundSize : Swift.UInt8 {
+  case snd8bit
+  case snd16bit
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public protocol AudioConverterDelegate : AnyObject {
+  func didSetFormatDescription(audio formatDescription: CoreMedia.CMFormatDescription?)
+  func sampleOutput(audio data: CoreAudio.UnsafeMutableAudioBufferListPointer, presentationTimeStamp: CoreMedia.CMTime)
+}
+public class AudioConverter {
+  public enum Option : Swift.String, HaishinKit.KeyPathRepresentable {
+    case muted
+    case bitrate
+    case sampleRate
+    case actualBitrate
+    public var keyPath: Swift.AnyKeyPath {
+      get
+    }
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+    public typealias AllCases = [HaishinKit.AudioConverter.Option]
+    public static var allCases: [HaishinKit.AudioConverter.Option] {
+      get
+    }
+  }
+  public static var minimumBitrate: Swift.UInt32
+  public static var defaultBitrate: Swift.UInt32
+  public static var defaultChannels: Swift.UInt32
+  public static var defaultSampleRate: Swift.Double
+  public static var defaultMaximumBuffers: Swift.Int
+  public var destination: HaishinKit.AudioConverter.Destination
+  weak public var delegate: HaishinKit.AudioConverterDelegate?
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  public var settings: HaishinKit.Setting<HaishinKit.AudioConverter, HaishinKit.AudioConverter.Option> {
+    get
+    set(value)
+  }
+  public init()
+  public func encodeBytes(_ bytes: Swift.UnsafeMutableRawPointer?, count: Swift.Int, presentationTimeStamp: CoreMedia.CMTime)
+  public func encodeSampleBuffer(_ sampleBuffer: CoreMedia.CMSampleBuffer, offset: Swift.Int = 0)
+  @objc deinit
+}
+extension AudioConverter : HaishinKit.Running {
+  public func startRunning()
+  public func stopRunning()
+}
+extension AudioConverter {
+  public enum Destination {
+    case aac
+    case pcm
+    public static func == (a: HaishinKit.AudioConverter.Destination, b: HaishinKit.AudioConverter.Destination) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+}
+public protocol Running : AnyObject {
+  var isRunning: HaishinKit.Atomic<Swift.Bool> { get }
+  func startRunning()
+  func stopRunning()
+}
+extension NetStream {
+  open var orientation: AVFoundation.AVCaptureVideoOrientation {
+    get
+    set(newValue)
+  }
+  open func attachScreen(_ screen: HaishinKit.CustomCaptureSession?, useScreenSize: Swift.Bool = true)
+  open var zoomFactor: CoreGraphics.CGFloat {
+    get
+  }
+  open func setZoomFactor(_ zoomFactor: CoreGraphics.CGFloat, ramping: Swift.Bool = false, withRate: Swift.Float = 2.0)
+}
+@_hasMissingDesignatedInitializers open class ByteArray {
+  public enum Error : Swift.Error {
+    case eof
+    case parse
+    public static func == (a: HaishinKit.ByteArray.Error, b: HaishinKit.ByteArray.Error) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  open var length: Swift.Int {
+    get
+    set(newValue)
+  }
+  open var position: Swift.Int
+  open var bytesAvailable: Swift.Int {
+    get
+  }
+  open subscript(i: Swift.Int) -> Swift.UInt8 {
+    get
+    set(newValue)
+  }
+  open func readUInt8() throws -> Swift.UInt8
+  @discardableResult
+  open func writeUInt8(_ value: Swift.UInt8) -> Self
+  open func readInt8() throws -> Swift.Int8
+  @discardableResult
+  open func writeInt8(_ value: Swift.Int8) -> Self
+  open func readUInt16() throws -> Swift.UInt16
+  @discardableResult
+  open func writeUInt16(_ value: Swift.UInt16) -> Self
+  open func readInt16() throws -> Swift.Int16
+  @discardableResult
+  open func writeInt16(_ value: Swift.Int16) -> Self
+  open func readUInt24() throws -> Swift.UInt32
+  @discardableResult
+  open func writeUInt24(_ value: Swift.UInt32) -> Self
+  open func readUInt32() throws -> Swift.UInt32
+  @discardableResult
+  open func writeUInt32(_ value: Swift.UInt32) -> Self
+  open func readInt32() throws -> Swift.Int32
+  @discardableResult
+  open func writeInt32(_ value: Swift.Int32) -> Self
+  open func readDouble() throws -> Swift.Double
+  @discardableResult
+  open func writeDouble(_ value: Swift.Double) -> Self
+  open func readFloat() throws -> Swift.Float
+  @discardableResult
+  open func writeFloat(_ value: Swift.Float) -> Self
+  open func readUTF8() throws -> Swift.String
+  @discardableResult
+  open func writeUTF8(_ value: Swift.String) throws -> Self
+  open func readUTF8Bytes(_ length: Swift.Int) throws -> Swift.String
+  @discardableResult
+  open func writeUTF8Bytes(_ value: Swift.String) -> Self
+  open func readBytes(_ length: Swift.Int) throws -> Foundation.Data
+  @discardableResult
+  open func writeBytes(_ value: Foundation.Data) -> Self
+  @discardableResult
+  open func clear() -> Self
+  @objc deinit
+}
+extension ByteArray : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+public enum SamplingFrequency : Swift.UInt8 {
+  case hz96000
+  case hz88200
+  case hz64000
+  case hz48000
+  case hz44100
+  case hz32000
+  case hz24000
+  case hz22050
+  case hz16000
+  case hz12000
+  case hz11025
+  case hz8000
+  case hz7350
+  public var sampleRate: Swift.Float64 {
+    get
+  }
+  public init(sampleRate: Swift.Float64)
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum FLVFrameType : Swift.UInt8 {
+  case key
+  case inter
+  case disposable
+  case generated
+  case command
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers open class VideoEffect : ObjectiveC.NSObject {
+  open var ciContext: CoreImage.CIContext?
+  open func execute(_ image: CoreImage.CIImage, info: CoreMedia.CMSampleBuffer?) -> CoreImage.CIImage
+  @objc deinit
+  @objc override dynamic public init()
+}
+@objc @_inheritsConvenienceInitializers open class HTTPService : HaishinKit.NetService {
+  open class var type: Swift.String {
+    get
+  }
+  open class var defaultPort: Swift.Int32 {
+    get
+  }
+  open class var defaultDocument: Swift.String {
+    get
+  }
+  open func get(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  open func post(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  open func put(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  open func delete(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  open func head(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  open func options(_ requst: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  open func trace(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  open func connect(_ request: HaishinKit.HTTPRequest, client: HaishinKit.NetClient)
+  @objc deinit
+  override public init(domain: Swift.String, type: Swift.String, name: Swift.String, port: Swift.Int32)
+}
+public struct DeviceUtil {
+  public static func device(withPosition: AVFoundation.AVCaptureDevice.Position) -> AVFoundation.AVCaptureDevice?
+  public static func device(withLocalizedName: Swift.String, mediaType: AVFoundation.AVMediaType) -> AVFoundation.AVCaptureDevice?
+}
+@objc open class GLHKView : GLKit.GLKView {
+  public static var defaultBackgroundColor: UIKit.UIColor
+  open var isMirrored: Swift.Bool
+  open var videoGravity: AVFoundation.AVLayerVideoGravity
+  open var videoFormatDescription: CoreMedia.CMVideoFormatDescription? {
+    get
+  }
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @objc override dynamic open func awakeFromNib()
+  open func attachStream(_ stream: HaishinKit.NetStream?)
+  @objc deinit
+  @objc override dynamic public init(frame: CoreGraphics.CGRect, context: OpenGLES.EAGLContext)
+}
+extension GLHKView : GLKit.GLKViewDelegate {
+  @objc dynamic public func glkView(_ view: GLKit.GLKView, drawIn rect: CoreGraphics.CGRect)
+}
+public protocol IEventDispatcher : AnyObject {
+  func addEventListener(_ type: HaishinKit.Event.Name, selector: ObjectiveC.Selector, observer: Swift.AnyObject?, useCapture: Swift.Bool)
+  func removeEventListener(_ type: HaishinKit.Event.Name, selector: ObjectiveC.Selector, observer: Swift.AnyObject?, useCapture: Swift.Bool)
+  func dispatch(event: HaishinKit.Event)
+  func dispatch(_ type: HaishinKit.Event.Name, bubbles: Swift.Bool, data: Any?)
+}
+public enum EventPhase : Swift.UInt8 {
+  case capturing
+  case atTarget
+  case bubbling
+  case dispose
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+open class Event {
+  public struct Name : Swift.RawRepresentable, Swift.ExpressibleByStringLiteral {
+    public typealias RawValue = Swift.String
+    public typealias StringLiteralType = Swift.String
+    public static var sync: HaishinKit.Event.Name
+    public static var event: HaishinKit.Event.Name
+    public static var ioError: HaishinKit.Event.Name
+    public static var rtmpStatus: HaishinKit.Event.Name
+    public let rawValue: Swift.String
+    public init(rawValue: Swift.String)
+    public init(stringLiteral value: Swift.String)
+    public typealias ExtendedGraphemeClusterLiteralType = HaishinKit.Event.Name.StringLiteralType
+    public typealias UnicodeScalarLiteralType = HaishinKit.Event.Name.StringLiteralType
+  }
+  public static func from(_ notification: Foundation.Notification) -> HaishinKit.Event
+  open var type: HaishinKit.Event.Name {
+    get
+  }
+  open var bubbles: Swift.Bool {
+    get
+  }
+  open var data: Any? {
+    get
+  }
+  open var target: Swift.AnyObject? {
+    get
+  }
+  public init(type: HaishinKit.Event.Name, bubbles: Swift.Bool = false, data: Any? = nil)
+  @objc deinit
+}
+extension Event : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+open class EventDispatcher : HaishinKit.IEventDispatcher {
+  public init()
+  public init(target: Swift.AnyObject)
+  @objc deinit
+  public func addEventListener(_ type: HaishinKit.Event.Name, selector: ObjectiveC.Selector, observer: Swift.AnyObject? = nil, useCapture: Swift.Bool = false)
+  public func removeEventListener(_ type: HaishinKit.Event.Name, selector: ObjectiveC.Selector, observer: Swift.AnyObject? = nil, useCapture: Swift.Bool = false)
+  open func dispatch(event: HaishinKit.Event)
+  public func dispatch(_ type: HaishinKit.Event.Name, bubbles: Swift.Bool, data: Any?)
+}
+@objc open class NetService : ObjectiveC.NSObject {
+  open var txtData: Foundation.Data? {
+    get
+  }
+  public var domain: Swift.String {
+    get
+  }
+  public var name: Swift.String {
+    get
+  }
+  public var port: Swift.Int32 {
+    get
+  }
+  public var type: Swift.String {
+    get
+  }
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  public var clients: [HaishinKit.NetClient] {
+    get
+  }
+  public init(domain: Swift.String, type: Swift.String, name: Swift.String, port: Swift.Int32)
+  @objc deinit
+  @objc override dynamic public init()
+}
+extension NetService : Foundation.NetServiceDelegate {
+  @objc dynamic public func netService(_ sender: Foundation.NetService, didAcceptConnectionWith inputStream: Foundation.InputStream, outputStream: Foundation.OutputStream)
+}
+extension NetService : HaishinKit.Running {
+  public func startRunning()
+  public func stopRunning()
+}
+@objc @_inheritsConvenienceInitializers open class NetSocket : ObjectiveC.NSObject {
+  public static var defaultTimeout: Swift.Int
+  public static var defaultWindowSizeC: Swift.Int
+  open var inputBuffer: Foundation.Data
+  open var timeout: Swift.Int
+  open var connected: Swift.Bool
+  open var windowSizeC: Swift.Int
+  open var totalBytesIn: HaishinKit.Atomic<Swift.Int64>
+  open var qualityOfService: Dispatch.DispatchQoS
+  open var securityLevel: Foundation.StreamSocketSecurityLevel
+  open var totalBytesOut: HaishinKit.Atomic<Swift.Int64> {
+    get
+  }
+  open var queueBytesOut: HaishinKit.Atomic<Swift.Int64> {
+    get
+  }
+  @objc deinit
+  public func connect(withName: Swift.String, port: Swift.Int)
+  @discardableResult
+  public func doOutput(data: Foundation.Data, locked: Swift.UnsafeMutablePointer<Swift.UInt32>? = nil) -> Swift.Int
+  open func close()
+  open func listen()
+  @objc override dynamic public init()
+}
+extension NetSocket : Foundation.StreamDelegate {
+  @objc dynamic public func stream(_ aStream: Foundation.Stream, handle eventCode: Foundation.Stream.Event)
+}
+public enum FLVAudioCodec : Swift.UInt8 {
+  case pcm
+  case adpcm
+  case mp3
+  case pcmle
+  case nellymoser16K
+  case nellymoser8K
+  case nellymoser
+  case g711A
+  case g711MU
+  case aac
+  case speex
+  case mp3_8k
+  case unknown
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum FLVAACPacketType : Swift.UInt8 {
+  case seq
+  case raw
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers open class HTTPStream : HaishinKit.NetStream {
+  public var expectedMedias: Swift.Set<AVFoundation.AVMediaType> {
+    get
+    set(newValue)
+  }
+  open func publish(_ name: Swift.String?)
+  override open func attachCamera(_ camera: AVFoundation.AVCaptureDevice?, onError: ((Foundation.NSError) -> Swift.Void)? = nil)
+  override open func attachAudio(_ audio: AVFoundation.AVCaptureDevice?, automaticallyConfiguresApplicationAudioSession: Swift.Bool = true, onError: ((Foundation.NSError) -> Swift.Void)? = nil)
+  @objc deinit
+  @objc override dynamic public init()
+}
+@_hasMissingDesignatedInitializers public class MP4Sampler {
+  public typealias Handler = () -> Swift.Void
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  @objc deinit
+}
+extension MP4Sampler : HaishinKit.Running {
+  public func startRunning()
+  public func stopRunning()
+}
+public protocol RTMPStreamDelegate : AnyObject {
+  func rtmpStream(_ stream: HaishinKit.RTMPStream, didPublishInsufficientBW connection: HaishinKit.RTMPConnection)
+  func rtmpStream(_ stream: HaishinKit.RTMPStream, didPublishSufficientBW connection: HaishinKit.RTMPConnection)
+  func rtmpStream(_ stream: HaishinKit.RTMPStream, didOutput audio: AVFoundation.AVAudioBuffer, presentationTimeStamp: CoreMedia.CMTime)
+  func rtmpStream(_ stream: HaishinKit.RTMPStream, didOutput video: CoreMedia.CMSampleBuffer)
+  func rtmpStream(_ stream: HaishinKit.RTMPStream, didStatics connection: HaishinKit.RTMPConnection)
+  func rtmpStreamDidClear(_ stream: HaishinKit.RTMPStream)
+}
+extension RTMPStreamDelegate {
+  public func rtmpStream(_ stream: HaishinKit.RTMPStream, didStatics connection: HaishinKit.RTMPConnection)
+  public func rtmpStream(_ stream: HaishinKit.RTMPStream, didOutput audio: AVFoundation.AVAudioBuffer, presentationTimeStamp: CoreMedia.CMTime)
+  public func rtmpStream(_ stream: HaishinKit.RTMPStream, didOutput video: CoreMedia.CMSampleBuffer)
+}
+public class AVMixer {
+  public static var bufferEmpty: Foundation.Notification.Name
+  public static var defaultFPS: Swift.Double
+  public static var defaultVideoSettings: [Foundation.NSString : Swift.AnyObject]
+  public enum Option : Swift.String, HaishinKit.KeyPathRepresentable, Swift.CaseIterable {
+    case fps
+    case sessionPreset
+    case isVideoMirrored
+    case continuousAutofocus
+    case continuousExposure
+    case preferredVideoStabilizationMode
+    public var keyPath: Swift.AnyKeyPath {
+      get
+    }
+    public typealias RawValue = Swift.String
+    public init?(rawValue: Swift.String)
+    public var rawValue: Swift.String {
+      get
+    }
+    public typealias AllCases = [HaishinKit.AVMixer.Option]
+    public static var allCases: [HaishinKit.AVMixer.Option] {
+      get
+    }
+  }
+  public var session: AVFoundation.AVCaptureSession {
+    get
+    set(newValue)
+  }
+  public var recorder: HaishinKit.AVRecorder! {
+    get
+  }
+  @objc deinit
+  public init()
+  public func dispose()
+}
+extension AVMixer {
+  public func startEncoding(delegate: Any)
+  public func stopEncoding()
+}
+extension AVMixer {
+  public func startDecoding(_ audioEngine: AVFoundation.AVAudioEngine?)
+  public func stopDecoding()
+}
+extension AVMixer : HaishinKit.Running {
+  public var isRunning: HaishinKit.Atomic<Swift.Bool> {
+    get
+  }
+  public func startRunning()
+  public func stopRunning()
+}
+public struct Atomic<A> {
+  public var value: A {
+    get
+  }
+  public init(_ value: A)
+  public mutating func mutate(_ transform: (inout A) -> Swift.Void)
+}
+public struct HTTPResponse : Swift.ExpressibleByDictionaryLiteral {
+  public typealias Key = Swift.String
+  public typealias Value = Swift.String
+  public var version: Swift.String
+  public var statusCode: Swift.String
+  public var headerFields: [Swift.String : Swift.String]
+  public var body: Foundation.Data?
+  public init(dictionaryLiteral elements: (HaishinKit.HTTPResponse.Key, HaishinKit.HTTPResponse.Value)...)
+}
+extension HaishinKit.HTTPRequest : Swift.CustomStringConvertible {}
+extension HaishinKit.HTTPResponse : Swift.CustomDebugStringConvertible {}

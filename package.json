@@ -1,0 +1,17 @@
+{
+  "name": "cordova-plugin-rtmp-broadcaster",
+  "version": "0.0.1",
+  "description": "Plugin test",
+  "cordova": {
+    "id": "cordova-plugin-rtmp-broadcaster",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "Miguel Rincon",
+  "license": "ISC"
+}

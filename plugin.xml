@@ -1,7 +1,32 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="cordova-plugin-rtmp-broadcaster" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>RTMPBroadcaster</name>
-    <js-module name="RTMPBroadcaster" src="www/RTMPBroadcaster.js">
-        <clobbers target="RTMPBroadcaster" />
+    <js-module src="www/RTMPBroadcaster.js">
+        <clobbers target="broadcaster" />
     </js-module>
+    <platform name="ios">
+	    <hook type="after_platform_add" src="hooks/embedframework.js" />
+	    <hook type="after_plugin_install" src="hooks/embedframework.js" />
+
+        <config-file target="config.xml" parent="/*">
+            <feature name="RTMPBroadcaster">
+                <param name="ios-package" value="RTMPBroadcaster" />
+            </feature>
+        </config-file>
+        <framework src="lib/ios/HaishinKit.framework" custom="true" />
+        <framework src="lib/ios/Logboard.framework" custom="true" />
+        <source-file src="src/ios/RTMPBroadcaster.swift" />
+        <framework src="Foundation.framework" />
+        <framework src="AVFoundation.framework" />
+        <framework src="UIKit.framework" />
+
+        <preference name="CAMERA_USAGE_DESCRIPTION" default="Access camera to stream live" />
+        <config-file parent="NSCameraUsageDescription" target="*-Info.plist">
+            <string>$CAMERA_USAGE_DESCRIPTION</string>
+        </config-file>
+        <preference name="MIC_USAGE_DESCRIPTION" default="Access microphone to stream live" />
+        <config-file parent="NSMicrophoneUsageDescription" target="*-Info.plist">
+            <string>$MIC_USAGE_DESCRIPTION</string>
+        </config-file>
+    </platform>
 </plugin>
