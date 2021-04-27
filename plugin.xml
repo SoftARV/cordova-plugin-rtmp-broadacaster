@@ -15,10 +15,9 @@
         </config-file>
         <framework src="lib/ios/HaishinKit.framework" custom="true" />
         <framework src="lib/ios/Logboard.xcframework" custom="true" />
-        <source-file src="src/ios/RTMPBroadcaster.swift" />
-        <framework src="Foundation.framework" />
         <framework src="AVFoundation.framework" />
-        <framework src="UIKit.framework" />
+
+        <source-file src="src/ios/RTMPBroadcaster.swift" />
 
         <preference name="CAMERA_USAGE_DESCRIPTION" default="Access camera to stream live" />
         <config-file parent="NSCameraUsageDescription" target="*-Info.plist">

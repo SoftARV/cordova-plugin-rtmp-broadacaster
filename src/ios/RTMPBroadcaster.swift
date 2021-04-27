@@ -12,7 +12,7 @@ import HaishinKit
 @objc(RTMPBroadcaster) public class RTMPBroadcaster: CDVPlugin {
     private var originalBackgroundColor: UIColor!
     
-    var cameraView: HKView!
+    private var cameraView: MTHKView!
     private var rtmpConnection: RTMPConnection!
     private var rtmpStream: RTMPStream!
     private var currentPosition: AVCaptureDevice.Position!
@@ -29,6 +29,7 @@ import HaishinKit
     @objc(showCameraFeed:)
     func showCameraFeed(command: CDVInvokedUrlCommand) {
         var pluginResult = CDVPluginResult (status: CDVCommandStatus_ERROR, messageAs: "The Plugin Failed")
+        UIApplication.shared.isIdleTimerDisabled = true
         rtmpConnection = RTMPConnection()
         rtmpStream = RTMPStream(connection: rtmpConnection)
         
@@ -41,12 +42,15 @@ import HaishinKit
             .fps: 30,
             .sessionPreset: AVCaptureSession.Preset.high
         ]
+        rtmpStream.audioSettings = [
+            .muted: false,
+            .bitrate: 64 * 1000
+        ]
         rtmpStream.videoSettings = [
             .width: 720,
             .height: 1280,
             .bitrate: 512 * 1000,
         ]
-        
         rtmpStream.attachAudio(AVCaptureDevice.default(for: AVMediaType.audio)) { error in
             print(error)
             return
@@ -57,7 +61,7 @@ import HaishinKit
             return
         }
         
-        cameraView = HKView(frame: self.webView.bounds)
+        cameraView = MTHKView(frame: self.webView.bounds)
         cameraView.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraView.attachStream(rtmpStream)
         
@@ -71,6 +75,9 @@ import HaishinKit
     
     @objc(removeCameraFeed:)
     func removeCameraFeed(command: CDVInvokedUrlCommand) {
+        UIApplication.shared.isIdleTimerDisabled = false
+        rtmpStream.close()
+        rtmpStream.dispose()
         self.webView.isOpaque = true
         self.webView.backgroundColor = originalBackgroundColor
         cameraView.removeFromSuperview()
