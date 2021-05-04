@@ -5,17 +5,11 @@
         <clobbers target="broadcaster" />
     </js-module>
     <platform name="ios">
-	    <hook type="after_platform_add" src="hooks/embedframework.js" />
-	    <hook type="after_plugin_install" src="hooks/embedframework.js" />
-
         <config-file target="config.xml" parent="/*">
             <feature name="RTMPBroadcaster">
                 <param name="ios-package" value="RTMPBroadcaster" />
             </feature>
         </config-file>
-        <framework src="lib/ios/HaishinKit.framework" custom="true" />
-        <framework src="lib/ios/Logboard.xcframework" custom="true" />
-        <framework src="AVFoundation.framework" />
 
         <source-file src="src/ios/RTMPBroadcaster.swift" />
 
