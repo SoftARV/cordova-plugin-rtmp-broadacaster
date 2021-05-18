@@ -5,13 +5,11 @@
 //  Created by Miguel on 3/24/21.
 //
 
-import Foundation
 import AVFoundation
 import HaishinKit
 
 @objc(RTMPBroadcaster) public class RTMPBroadcaster: CDVPlugin {
     private var originalBackgroundColor: UIColor!
-    
     private var cameraView: MTHKView!
     private var rtmpConnection: RTMPConnection!
     private var rtmpStream: RTMPStream!
