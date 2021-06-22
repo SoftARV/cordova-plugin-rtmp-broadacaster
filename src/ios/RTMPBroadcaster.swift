@@ -8,7 +8,8 @@
 import AVFoundation
 import HaishinKit
 
-@objc(RTMPBroadcaster) public class RTMPBroadcaster: CDVPlugin {
+@objc(RTMPBroadcaster) 
+public class RTMPBroadcaster: CDVPlugin {
     private var originalBackgroundColor: UIColor!
     private var cameraView: MTHKView!
     private var rtmpConnection: RTMPConnection!
@@ -84,7 +85,6 @@ import HaishinKit
     @objc(rotateCamera:)
     func rotateCamera(command: CDVInvokedUrlCommand) {
         let position: AVCaptureDevice.Position = currentPosition == .back ? .front : .back
-        rtmpStream.captureSettings[.isVideoMirrored] = position == .front
         rtmpStream.attachCamera(DeviceUtil.device(withPosition: position)) {error in
             print(error)
         }
