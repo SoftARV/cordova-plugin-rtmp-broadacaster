@@ -103,6 +103,7 @@ public class RTMPBroadcaster: CDVPlugin {
     @objc(stopStream:)
     func stopStream(command: CDVInvokedUrlCommand) {
         rtmpConnection.close()
+        rtmpConnection.dispose()
     }
     
     
