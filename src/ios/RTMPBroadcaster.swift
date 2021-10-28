@@ -19,7 +19,7 @@ public class RTMPBroadcaster: CDVPlugin {
     override public init() {
         super.init()
 
-        originalBackgroundColor = self.webView.backgroundColor;
+        originalBackgroundColor = self.webView.backgroundColor
         configureAudioSession()
     }
     
