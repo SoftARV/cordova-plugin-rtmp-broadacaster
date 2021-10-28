@@ -76,7 +76,7 @@ public class RTMPBroadcaster: CDVPlugin {
     func removeCameraFeed(command: CDVInvokedUrlCommand) {
         UIApplication.shared.isIdleTimerDisabled = false
         rtmpStream.close()
-        rtmpStream.dispose()
+
         self.webView.isOpaque = true
         self.webView.backgroundColor = originalBackgroundColor
         cameraView.removeFromSuperview()
@@ -103,7 +103,6 @@ public class RTMPBroadcaster: CDVPlugin {
     @objc(stopStream:)
     func stopStream(command: CDVInvokedUrlCommand) {
         rtmpConnection.close()
-        rtmpConnection.dispose()
     }
     
     
