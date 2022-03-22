@@ -50,15 +50,15 @@ public class RTMPBroadcaster: CDVPlugin {
             
             self.rtmpStream.captureSettings = [
                 .fps: 30,
-                .sessionPreset: AVCaptureSession.Preset.high
+                .sessionPreset: AVCaptureSession.Preset.vga640x480
             ]
             self.rtmpStream.audioSettings = [
                 .muted: false,
                 .bitrate: 64 * 1000
             ]
             self.rtmpStream.videoSettings = [
-                .width: 720,
-                .height: 1280,
+                .width: 480,
+                .height: 640,
                 .bitrate: 512 * 1000,
             ]
             self.rtmpStream.attachAudio(AVCaptureDevice.default(for: AVMediaType.audio)) { error in
